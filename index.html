@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Остро — барбершоп</title>
+<meta name="description" content="Барбершоп «Остро»: мужские стрижки, фейды, бороды и королевское бритьё. Онлайн-запись к любому мастеру.">
+<meta name="theme-color" content="#ebe7e0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ebe7e0;
+    --paper: #f6f3ee;
+    --ink: #121212;
+    --ink-2: #3b3a38;
+    --muted: #7a756d;
+    --red: #d42a2a;
+    --blue: #1f3fa0;
+    --brass: #b08a4a;
+    --line: rgba(18,18,18,.14);
+    --ease: cubic-bezier(.22,.8,.24,1);
+    --disp: Unbounded, "Arial Black", sans-serif;
+    --sans: Manrope, -apple-system, "Segoe UI", Arial, sans-serif;
+    --r: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); overflow-x: hidden; }
+  body.lock { overflow: hidden; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  svg { display: block; }
+  ::selection { background: var(--red); color: #fff; }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; border-radius: 6px; }
+  body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .08; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .wrap { max-width: 1260px; margin: 0 auto; padding: 0 28px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .eyebrow::before { content: ""; width: 10px; height: 10px; background: var(--red); border-radius: 2px; transform: rotate(45deg); }
+  .title { font-family: var(--disp); font-weight: 800; text-transform: uppercase; font-size: clamp(32px, 4.8vw, 66px); line-height: 1.02; letter-spacing: -.02em; margin-top: 18px; }
+  .title .red { color: var(--red); }
+  /* слова в полоску, как шест барбера */
+  .out { color: transparent; -webkit-background-clip: text; background-clip: text; background-image: repeating-linear-gradient(-45deg, var(--red) 0 8px, var(--blue) 8px 16px); animation: stripes 1.6s linear infinite; padding-right: .04em; }
+  @keyframes stripes { to { background-position: 22.627px 0; } }
+  .lead { font-size: 18px; color: var(--ink-2); max-width: 520px; }
+  .sec { padding: 130px 0; position: relative; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 56px; padding: 0 28px; border-radius: 12px; font-weight: 700; font-size: 15px; transition: transform .35s var(--ease), background .3s, color .3s, box-shadow .35s; white-space: nowrap; }
+  .btn-ink { background: var(--ink); color: var(--paper); box-shadow: 4px 4px 0 var(--red); }
+  .btn-ink:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--red); }
+  .btn-ink:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--red); }
+  .btn-line { border: 2px solid var(--ink); }
+  .btn-line:hover { background: var(--ink); color: var(--paper); }
+  .btn-sm { height: 44px; padding: 0 20px; font-size: 14px; }
+
+  .rv { opacity: 0; transform: translateY(28px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  .rv.in { opacity: 1; transform: none; }
+  .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; } .d3 { transition-delay: .3s; }
+
+  /* ---------- Шапка ---------- */
+  header.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 18px 0; transition: padding .35s, background .35s, box-shadow .35s; }
+  header.nav.scrolled { padding: 10px 0; background: rgba(235,231,224,.86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--line); }
+  .nav .wrap { display: flex; align-items: center; gap: 36px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: var(--disp); font-weight: 800; font-size: 22px; letter-spacing: .04em; }
+  .logo svg { width: 30px; height: 30px; }
+  .menu { display: flex; gap: 28px; font-weight: 600; font-size: 14px; }
+  .menu a { position: relative; }
+  .menu a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -4px; height: 2px; background: var(--red); transition: right .35s var(--ease); }
+  .menu a:hover::after { right: 0; }
+  .nav-r { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+  .nav-phone { font-weight: 700; font-size: 14px; }
+  .burger { display: none; width: 44px; height: 44px; border-radius: 12px; border: 2px solid var(--ink); position: relative; }
+  .burger span { position: absolute; left: 11px; right: 11px; height: 2px; background: var(--ink); transition: transform .35s var(--ease), top .35s var(--ease); }
+  .burger span:nth-child(1) { top: 15px; } .burger span:nth-child(2) { top: 23px; }
+  .menu-open .burger span:nth-child(1) { top: 19px; transform: rotate(45deg); }
+  .menu-open .burger span:nth-child(2) { top: 19px; transform: rotate(-45deg); }
+  .mmenu { position: fixed; inset: 0; z-index: 45; background: var(--ink); color: var(--paper); display: flex; flex-direction: column; justify-content: center; padding: 0 22px; gap: 6px; transform: translateY(-100%); transition: transform .6s var(--ease), visibility 0s .6s; visibility: hidden; }
+  .menu-open .mmenu { transform: none; visibility: visible; transition: transform .6s var(--ease), visibility 0s; }
+  .menu-open .burger { border-color: var(--paper); background: var(--paper); }
+  .mmenu a { font-family: var(--disp); font-weight: 800; font-size: 34px; text-transform: uppercase; line-height: 1.3; }
+  .mmenu .btn { margin-top: 24px; align-self: flex-start; background: var(--red); color: #fff; box-shadow: none; }
+
+  /* ---------- Первый экран ---------- */
+  .hero { padding: 130px 0 70px; min-height: 100vh; min-height: 100svh; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items: center; width: 100%; }
+  .hero h1 { font-family: var(--disp); font-weight: 800; text-transform: uppercase; font-size: clamp(40px, 6.4vw, 96px); line-height: .98; letter-spacing: -.03em; margin: 22px 0 26px; }
+  .hero h1 .ln { display: block; overflow: hidden; }
+  .hero h1 .ln > span { display: inline-block; transform: translateY(110%); animation: up 1.1s var(--ease) forwards; }
+  .hero h1 .ln:nth-child(2) > span { animation-delay: .1s; } .hero h1 .ln:nth-child(3) > span { animation-delay: .2s; }
+  .hero h1 .red { color: var(--red); }
+  @keyframes up { to { transform: none; } }
+  .fade { opacity: 0; animation: fade 1.2s .45s var(--ease) forwards; }
+  @keyframes fade { to { opacity: 1; } }
+  .hero .actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+  .stats { display: flex; gap: 40px; margin-top: 54px; }
+  .stats b { display: block; font-family: var(--disp); font-weight: 800; font-size: 36px; line-height: 1; }
+  .stats span { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .hero-art { position: relative; display: flex; gap: 22px; align-items: stretch; justify-content: flex-end; }
+  .pole { width: 46px; flex: none; display: flex; flex-direction: column; align-items: center; }
+  .pole .cap { width: 46px; height: 22px; border-radius: 10px 10px 4px 4px; background: linear-gradient(180deg, #d8b878, var(--brass) 60%, #7a5d2c); }
+  .pole .cap.b { border-radius: 4px 4px 10px 10px; }
+  .pole .glass { flex: 1; width: 36px; border-radius: 4px; overflow: hidden; position: relative; box-shadow: inset 0 0 0 2px rgba(255,255,255,.4); background: repeating-linear-gradient(-45deg, var(--red) 0 14px, #fff 14px 28px, var(--blue) 28px 42px, #fff 42px 56px); background-size: 100% 79.2px; animation: pole 2.4s linear infinite; }
+  .pole .glass::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.25), rgba(255,255,255,.35) 40%, rgba(0,0,0,.2)); }
+  @keyframes pole { to { background-position: 0 79.2px; } }
+
+  /* до / после */
+  .ba { position: relative; flex: 1; max-width: 460px; aspect-ratio: 4/5; border-radius: 26px; overflow: hidden; background: var(--paper); border: 2px solid var(--ink); box-shadow: 10px 10px 0 var(--ink); --p: 50%; touch-action: pan-y; }
+  .ba .before, .ba .after { position: absolute; inset: 0; }
+  .ba svg { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 88%; }
+  .ba .after { clip-path: inset(0 0 0 var(--p)); background: #e9e1d4; }
+  .ba .before { background: #d9d2c6; }
+  .ba-line { position: absolute; top: 0; bottom: 0; left: var(--p); width: 3px; margin-left: -1.5px; background: var(--ink); pointer-events: none; }
+  .ba-knob { position: absolute; top: 84%; left: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-weight: 800; box-shadow: 0 0 0 4px var(--paper); }
+  .ba-range { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+  .ba-range:focus-visible + .ba-line .ba-knob { box-shadow: 0 0 0 4px var(--paper), 0 0 0 7px var(--red); }
+  .ba-lbl { position: absolute; top: 16px; padding: 6px 12px; border-radius: 8px; font: 800 11px var(--disp); letter-spacing: .12em; pointer-events: none; }
+  .ba-lbl.l { left: 16px; background: var(--paper); }
+  .ba-lbl.r { right: 16px; background: var(--red); color: #fff; }
+  .ba-hint { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 700; color: var(--ink-2); pointer-events: none; }
+  .sticker { position: absolute; left: -30px; bottom: 40px; width: 130px; height: 130px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; text-align: center; font: 800 13px/1.15 var(--disp); text-transform: uppercase; transform: rotate(-12deg); box-shadow: 4px 4px 0 var(--ink); z-index: 2; animation: wob 4s ease-in-out infinite; }
+  .sticker b { display: block; font-size: 30px; }
+  @keyframes wob { 50% { transform: rotate(-4deg) scale(1.04); } }
+
+  /* ---------- Лента ---------- */
+  .band-wrap { overflow: hidden; padding: 24px 0; }
+  .band { background: var(--ink); color: var(--paper); padding: 22px 0; overflow: hidden; transform: rotate(-1.2deg); margin: 0 -20px; }
+  .btrack { display: flex; width: max-content; animation: marq 32s linear infinite; }
+  .btrack span { font: 800 clamp(20px, 2.6vw, 34px) var(--disp); text-transform: uppercase; padding: 0 22px; display: flex; align-items: center; gap: 44px; white-space: nowrap; }
+  .btrack span::after { content: "✶"; color: var(--red); }
+  @keyframes marq { to { transform: translateX(-50%); } }
+
+  /* ---------- Подбор стрижки ---------- */
+  .styler { display: grid; grid-template-columns: 300px 1fr 340px; gap: 30px; margin-top: 60px; align-items: center; }
+  .slist { display: grid; gap: 8px; }
+  .sbtn { text-align: left; padding: 16px 18px; border-radius: 14px; border: 2px solid transparent; display: flex; justify-content: space-between; align-items: center; transition: all .3s var(--ease); font-weight: 700; }
+  .sbtn small { font-weight: 600; color: var(--muted); font-size: 13px; }
+  .sbtn:hover { border-color: var(--line); background: var(--paper); }
+  .sbtn.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .sbtn.on small { color: rgba(246,243,238,.6); }
+  .stage { position: relative; aspect-ratio: 1; max-width: 480px; margin: 0 auto; width: 100%; border-radius: 50%; background: radial-gradient(circle at 50% 40%, var(--paper), #ddd6ca 70%); display: grid; place-items: center; overflow: hidden; border: 2px solid var(--ink); }
+  .stage svg { width: 92%; height: 92%; margin-top: 8%; }
+  .stage .hair, .stage .beard-g { transition: opacity .4s var(--ease); }
+  .stage.swap svg { animation: swap .5s var(--ease); }
+  @keyframes swap { 0% { transform: scale(.96); opacity: .4; } 100% { transform: none; opacity: 1; } }
+  .sinfo h3 { font: 800 30px/1.05 var(--disp); text-transform: uppercase; }
+  .sinfo p { color: var(--ink-2); margin: 14px 0 18px; }
+  .sinfo dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; font-size: 14px; margin-bottom: 22px; }
+  .sinfo dt { color: var(--muted); font-weight: 600; }
+  .sinfo dd { font-weight: 700; }
+  .toggle { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; margin-bottom: 24px; cursor: pointer; user-select: none; }
+  .toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .toggle .sw { width: 52px; height: 30px; border-radius: 999px; background: #cfc8bc; position: relative; transition: background .3s; flex: none; }
+  .toggle .sw::after { content: ""; position: absolute; left: 4px; top: 4px; width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: transform .35s var(--ease); box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+  .toggle input:checked + .sw { background: var(--red); }
+  .toggle input:checked + .sw::after { transform: translateX(22px); }
+  .toggle input:focus-visible + .sw { outline: 2px solid var(--red); outline-offset: 3px; }
+
+  /* ---------- Цены ---------- */
+  .prices { background: var(--ink); color: var(--paper); border-radius: 40px; padding: 80px 70px; }
+  .prices .eyebrow { color: rgba(246,243,238,.55); }
+  .prices .out { background-image: repeating-linear-gradient(-45deg, var(--red) 0 8px, var(--paper) 8px 16px); }
+  .p-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; flex-wrap: wrap; margin-bottom: 44px; }
+  .lvl { display: inline-flex; padding: 5px; border-radius: 14px; background: #262626; gap: 4px; flex-wrap: wrap; }
+  .lvl button { height: 44px; padding: 0 18px; border-radius: 10px; font-weight: 700; font-size: 14px; color: rgba(246,243,238,.7); transition: background .3s, color .3s; }
+  .lvl button.on { background: var(--paper); color: var(--ink); }
+  .plist { display: grid; grid-template-columns: 1fr 1fr; gap: 0 70px; }
+  .pi { display: flex; align-items: baseline; gap: 12px; padding: 20px 0; border-bottom: 1px solid rgba(246,243,238,.14); }
+  .pi h4 { font-weight: 700; font-size: 17px; }
+  .pi small { display: block; color: rgba(246,243,238,.5); font-size: 13px; font-weight: 500; }
+  .pi .dots { flex: 1; }
+  .pi .pr { font: 700 22px var(--disp); white-space: nowrap; }
+  .pi .pr.flash { animation: flash .5s var(--ease); }
+  @keyframes flash { 0% { color: var(--red); transform: translateY(-4px); } 100% { color: inherit; transform: none; } }
+  .combo { margin-top: 34px; display: flex; align-items: center; gap: 14px; padding: 18px 22px; border-radius: 14px; background: var(--red); font-weight: 700; flex-wrap: wrap; }
+  .combo b { font-family: var(--disp); }
+
+  /* ---------- Мастера ---------- */
+  .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 60px; }
+  .mc { background: var(--paper); border: 2px solid var(--ink); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; transition: opacity 1s var(--ease), transform .4s var(--ease), box-shadow .4s var(--ease); }
+  .mc:hover { transform: translate(-4px, -4px); box-shadow: 8px 8px 0 var(--ink); }
+  .mc .ph { aspect-ratio: 1/1.05; background: var(--ink); position: relative; display: grid; place-items: center; overflow: hidden; }
+  .mc .ph svg { width: 86%; margin-top: 18%; }
+  .mc .lv { position: absolute; top: 14px; left: 14px; padding: 6px 10px; border-radius: 8px; background: var(--paper); font: 800 10px var(--disp); letter-spacing: .08em; text-transform: uppercase; }
+  .mc .lv.top { background: var(--red); color: #fff; }
+  .mc .lv.art { background: var(--brass); color: #fff; }
+  .mc .body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+  .mc h3 { font: 800 22px var(--disp); text-transform: uppercase; }
+  .mc p { color: var(--muted); font-size: 14px; font-weight: 600; margin: 4px 0 14px; }
+  .mc .near { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .mc .near i { width: 8px; height: 8px; border-radius: 50%; background: #2fa84f; }
+  .mc .btn { margin-top: auto; width: 100%; box-shadow: none; }
+
+  /* ---------- Лояльность ---------- */
+  .loyal { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+  .lcard { background: var(--paper); border: 2px solid var(--ink); border-radius: 26px; padding: 34px; box-shadow: 10px 10px 0 var(--red); }
+  .lcard .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .lcard .top b { font: 800 20px var(--disp); }
+  .lcard .top span { font-size: 13px; color: var(--muted); font-weight: 700; }
+  .stamps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+  .stamp { aspect-ratio: 1; border-radius: 50%; border: 2px dashed rgba(18,18,18,.3); display: grid; place-items: center; position: relative; }
+  .stamp svg { width: 56%; opacity: 0; transform: scale(2) rotate(-30deg); transition: opacity .3s, transform .45s var(--ease); }
+  .stamp.on { border-style: solid; border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .stamp.on svg { opacity: 1; transform: none; }
+  .stamp.free { border: 2px solid var(--red); color: var(--red); font: 800 10px var(--disp); text-transform: uppercase; text-align: center; line-height: 1.1; }
+  .stamp.free.lit { background: var(--red); color: #fff; animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(212,42,42,.2); } }
+  .lcard p { margin-top: 24px; font-size: 14px; color: var(--ink-2); font-weight: 600; }
+  .perks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 34px; }
+  .perk { padding: 20px; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); }
+  .perk b { display: block; font: 800 15px var(--disp); text-transform: uppercase; margin-bottom: 4px; }
+  .perk span { font-size: 14px; color: var(--muted); font-weight: 600; }
+
+  /* ---------- Отзывы ---------- */
+  .revs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 60px; }
+  .rev { background: var(--paper); border-radius: 22px; padding: 30px; border: 1px solid var(--line); display: flex; flex-direction: column; }
+  .rev:nth-child(2) { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .rev:nth-child(2) .who small { color: rgba(246,243,238,.55); }
+  .rev .st { color: var(--red); letter-spacing: 3px; }
+  .rev p { font-size: 18px; font-weight: 600; line-height: 1.5; margin: 16px 0 24px; }
+  .rev .who { margin-top: auto; display: flex; align-items: center; gap: 12px; }
+  .rev .av { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font: 800 15px var(--disp); background: var(--red); color: #fff; }
+  .rev .who b { display: block; }
+  .rev .who small { color: var(--muted); font-weight: 600; }
+  .score { display: flex; gap: 34px; }
+  .score b { font: 800 46px var(--disp); line-height: 1; display: block; }
+  .score span { font-size: 13px; color: var(--muted); font-weight: 700; }
+
+  /* ---------- Контакты ---------- */
+  .contact { background: var(--red); color: #fff; border-radius: 40px 40px 0 0; padding: 110px 0 40px; overflow: hidden; }
+  .contact .big { font: 800 clamp(28px, 8vw, 128px)/.95 var(--disp); text-transform: uppercase; letter-spacing: -.04em; }
+  .contact .big .out { background-image: repeating-linear-gradient(-45deg, #fff 0 8px, var(--ink) 8px 16px); }
+  .ctg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 70px; padding-top: 40px; border-top: 2px solid rgba(255,255,255,.35); }
+  .ctg .lb { font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; opacity: .7; margin-bottom: 8px; }
+  .ctg .v { font-size: 19px; font-weight: 700; line-height: 1.45; }
+  .ctg a.v:hover { text-decoration: underline; }
+  .contact .btn-ink { background: #fff; color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+  .foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-top: 70px; font-size: 13px; font-weight: 600; opacity: .8; }
+
+  /* ---------- Запись ---------- */
+  .modal { position: fixed; inset: 0; z-index: 80; display: none; }
+  .modal.open { display: block; }
+  .modal .bg { position: absolute; inset: 0; background: rgba(18,18,18,.55); backdrop-filter: blur(4px); opacity: 0; animation: fade .35s forwards; }
+  .sheet { position: absolute; right: 0; top: 0; bottom: 0; width: min(580px, 100%); background: var(--paper); border-left: 2px solid var(--ink); padding: 28px 36px; overflow-y: auto; display: flex; flex-direction: column; animation: slide .55s var(--ease); }
+  @keyframes slide { from { transform: translateX(100%); } }
+  .sheet-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+  .close { width: 44px; height: 44px; border-radius: 12px; border: 2px solid var(--ink); display: grid; place-items: center; font-weight: 800; transition: background .3s, color .3s; }
+  .close:hover { background: var(--ink); color: var(--paper); }
+  .bar { display: flex; gap: 6px; margin-bottom: 26px; }
+  .bar i { flex: 1; height: 4px; border-radius: 4px; background: var(--line); transition: background .4s; }
+  .bar i.on { background: var(--red); }
+  .bk-t { font: 800 30px/1.05 var(--disp); text-transform: uppercase; }
+  .bk-s { color: var(--muted); font-weight: 600; margin: 8px 0 22px; font-size: 15px; }
+  .opts { display: grid; gap: 8px; }
+  .opt { text-align: left; padding: 14px 16px; border-radius: 14px; border: 2px solid var(--line); display: flex; align-items: center; gap: 14px; transition: border-color .25s, background .25s; }
+  .opt:hover { border-color: var(--ink); }
+  .opt.on { border-color: var(--ink); background: #fff; }
+  .opt .ck { width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--ink); flex: none; display: grid; place-items: center; transition: background .2s; }
+  .opt.on .ck { background: var(--red); border-color: var(--red); }
+  .opt .ck svg { opacity: 0; transition: opacity .2s; }
+  .opt.on .ck svg { opacity: 1; }
+  .opt.radio .ck { border-radius: 50%; }
+  .opt .tx { flex: 1; }
+  .opt b { display: block; font-weight: 700; }
+  .opt small { color: var(--muted); font-weight: 600; font-size: 13px; }
+  .opt .pr { font: 700 16px var(--disp); white-space: nowrap; }
+  .lbl { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; }
+  .chips { display: grid; gap: 8px; }
+  .days { grid-template-columns: repeat(5, 1fr); }
+  .times { grid-template-columns: repeat(6, 1fr); }
+  .chip { border: 2px solid var(--line); border-radius: 12px; padding: 9px 2px; text-align: center; font-weight: 700; font-size: 14px; transition: all .25s; }
+  .chip small { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .chip b { font: 800 20px var(--disp); }
+  .chip:hover:not(:disabled) { border-color: var(--ink); }
+  .chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .chip.on small { color: rgba(246,243,238,.6); }
+  .chip:disabled { opacity: .3; text-decoration: line-through; cursor: not-allowed; }
+  .total { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; border-radius: 14px; background: var(--ink); color: var(--paper); margin-top: 18px; font-weight: 700; }
+  .total b { font: 800 22px var(--disp); }
+  .total small { display: block; color: rgba(246,243,238,.6); font-size: 12px; font-weight: 600; }
+  .disc { color: #ff8a8a; font-size: 12px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+  .field input, .field textarea { width: 100%; font: inherit; font-weight: 600; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--line); background: #fff; color: var(--ink); transition: border-color .25s; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--ink); }
+  .summary { border: 2px solid var(--ink); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; display: grid; gap: 6px; font-size: 14px; }
+  .summary div { display: flex; justify-content: space-between; gap: 12px; }
+  .summary span { color: var(--muted); font-weight: 600; }
+  .summary b { text-align: right; }
+  .note { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .sheet-foot { margin-top: auto; padding-top: 24px; display: flex; gap: 10px; }
+  .sheet-foot .btn { flex: 1; }
+  .sheet-foot .btn[disabled] { opacity: .3; pointer-events: none; box-shadow: none; }
+  .done { text-align: center; padding-top: 30px; }
+  .done .ok { width: 110px; height: 110px; margin: 0 auto 26px; border-radius: 50%; background: var(--red); display: grid; place-items: center; box-shadow: 6px 6px 0 var(--ink); animation: pop .6s var(--ease); }
+  @keyframes pop { from { transform: scale(.3) rotate(-30deg); opacity: 0; } }
+  .done .ok path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw .5s .3s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  /* ---------- Адаптив ---------- */
+  @media (max-width: 1100px) {
+    .menu, .nav-phone { display: none; }
+    .burger { display: block; }
+    .hero .wrap, .loyal { grid-template-columns: 1fr; }
+    .hero-art { justify-content: center; margin-top: 20px; }
+    .styler { grid-template-columns: 1fr 1fr; }
+    .slist { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); }
+    .team { grid-template-columns: 1fr 1fr; }
+    .prices { padding: 60px 40px; }
+    .plist { grid-template-columns: 1fr; }
+    .revs { grid-template-columns: 1fr 1fr; }
+    .ctg { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 680px) {
+    .wrap { padding: 0 16px; }
+    .sec { padding: 90px 0; }
+    .nav .btn { display: none; }
+    .hero { padding-top: 100px; }
+    .hero h1 { font-size: clamp(34px, 10.5vw, 52px); }
+    .hero .actions .btn { flex: 1; }
+    .stats { gap: 22px; }
+    .stats b { font-size: 26px; }
+    .pole { width: 30px; } .pole .cap { width: 30px; } .pole .glass { width: 24px; }
+    .ba { box-shadow: 6px 6px 0 var(--ink); }
+    .ba-hint { display: none; }
+    .sticker { left: auto; right: -8px; bottom: -14px; width: 100px; height: 100px; font-size: 10px; }
+    .sticker b { font-size: 22px; }
+    .styler { grid-template-columns: 1fr; gap: 24px; }
+    .slist { grid-template-columns: 1fr 1fr; }
+    .sbtn { padding: 12px 14px; font-size: 14px; }
+    .sbtn small { display: none; }
+    .stage { max-width: 320px; }
+    .prices { padding: 46px 20px; border-radius: 28px; }
+    .pi { flex-wrap: wrap; }
+    .team { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mc h3 { font-size: 16px; }
+    .mc p { font-size: 12px; }
+    .mc .body { padding: 14px; }
+    .mc .near { font-size: 11px; }
+    .mc .btn { height: 40px; font-size: 13px; padding: 0 10px; }
+    .stamps { gap: 6px; }
+    .lcard { padding: 22px; box-shadow: 6px 6px 0 var(--red); }
+    .perks { grid-template-columns: 1fr; }
+    .revs { grid-template-columns: 1fr; }
+    .ctg { grid-template-columns: 1fr; }
+    .contact { border-radius: 28px 28px 0 0; padding-top: 80px; }
+    .sheet { padding: 20px 16px; }
+    .bk-t { font-size: 24px; }
+    .times { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 360px) {
+    .title { font-size: 26px; }
+    .loyal > *, .styler > * { min-width: 0; }
+    .stamp.free { font-size: 7px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .rv { opacity: 1; transform: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#" class="logo" aria-label="Остро — на главную">
+      <svg viewBox="0 0 30 30" fill="none"><rect x="2" y="9" width="26" height="12" rx="3" fill="#121212"/><path d="M5 15h20" stroke="#ebe7e0" stroke-width="1.5" stroke-dasharray="2 2"/><rect x="2" y="9" width="6" height="12" rx="2" fill="#d42a2a"/></svg>
+      ОСТРО
+    </a>
+    <nav class="menu">
+      <a href="#styles">Стрижки</a>
+      <a href="#prices">Цены</a>
+      <a href="#team">Барберы</a>
+      <a href="#club">Клуб</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <div class="nav-r">
+      <a class="nav-phone" href="tel:+70000000000">+7 (000) 000-00-00</a>
+      <button class="btn btn-ink btn-sm" data-book>Записаться</button>
+      <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mmenu" id="mmenu">
+  <a href="#styles">Стрижки</a>
+  <a href="#prices">Цены</a>
+  <a href="#team">Барберы</a>
+  <a href="#club">Клуб</a>
+  <a href="#contacts">Контакты</a>
+  <button class="btn" data-book>Записаться онлайн</button>
+</div>
+
+<!-- ПЕРВЫЙ ЭКРАН -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow fade">Барбершоп · с 2018 года</span>
+      <h1>
+        <span class="ln"><span>Стрижка,</span></span>
+        <span class="ln"><span class="out">которая</span></span>
+        <span class="ln"><span>держит <span class="red">форму</span></span></span>
+      </h1>
+      <p class="lead fade">Фейды, классика и бороды от барберов, которые знают, как ведут себя волосы через три недели, а не только в день стрижки.</p>
+      <div class="actions fade">
+        <button class="btn btn-ink" data-book>Записаться онлайн →</button>
+        <a href="#styles" class="btn btn-line">Подобрать стрижку</a>
+      </div>
+      <div class="stats fade">
+        <div><b data-count="7">0</b><span>лет работы</span></div>
+        <div><b data-count="21500" data-sep>0</b><span>стрижек</span></div>
+        <div><b>4,9</b><span>на картах</span></div>
+      </div>
+    </div>
+    <div class="hero-art fade">
+      <div class="pole" aria-hidden="true"><div class="cap"></div><div class="glass"></div><div class="cap b"></div></div>
+      <div class="ba" id="ba">
+        <div class="before" id="baBefore"></div>
+        <div class="after" id="baAfter"></div>
+        <input class="ba-range" id="baRange" type="range" min="0" max="100" value="50" aria-label="Сравнить до и после стрижки">
+        <div class="ba-line"><span class="ba-knob">⇆</span></div>
+        <span class="ba-lbl l">ДО</span><span class="ba-lbl r">ПОСЛЕ</span>
+        <span class="ba-hint">Потяните, чтобы сравнить</span>
+      </div>
+      <div class="sticker"><div><b>6-я</b>стрижка<br>бесплатно</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="band-wrap" aria-hidden="true"><div class="band">
+  <div class="btrack">
+    <span>Фейд</span><span>Классика</span><span>Кроп</span><span>Андеркат</span><span>Борода</span><span>Бритьё</span><span>Камуфляж седины</span>
+    <span>Фейд</span><span>Классика</span><span>Кроп</span><span>Андеркат</span><span>Борода</span><span>Бритьё</span><span>Камуфляж седины</span>
+  </div>
+</div></div>
+
+<!-- ПОДБОР СТРИЖКИ -->
+<section class="sec" id="styles">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eyebrow">Подбор стрижки</span>
+      <h2 class="title">Примерь <span class="red">стрижку</span><br><span class="out">до визита</span></h2>
+    </div>
+    <div class="styler">
+      <div class="slist rv" id="slist" role="tablist" aria-label="Стрижки"></div>
+      <div class="stage rv d1" id="stage" aria-live="polite"></div>
+      <div class="sinfo rv d2" id="sinfo"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ЦЕНЫ -->
+<section class="sec" id="prices" style="padding-top:20px">
+  <div class="wrap">
+    <div class="prices rv">
+      <div class="p-head">
+        <div><span class="eyebrow">Цены</span><h2 class="title">Прайс <span class="out">без</span> сюрпризов</h2></div>
+        <div class="lvl" id="lvl" role="tablist" aria-label="Уровень мастера"></div>
+      </div>
+      <div class="plist" id="plist"></div>
+      <div class="combo">Стрижка + борода в один визит <b>−300 ₽</b> · Отец + сын <b>−15%</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- МАСТЕРА -->
+<section class="sec" id="team" style="padding-top:40px">
+  <div class="wrap">
+    <div class="rv"><span class="eyebrow">Барберы</span><h2 class="title">Выбери <span class="red">своего</span> мастера</h2></div>
+    <div class="team" id="teamGrid"></div>
+  </div>
+</section>
+
+<!-- КЛУБ -->
+<section class="sec" id="club" style="padding-top:20px">
+  <div class="wrap loyal">
+    <div class="rv">
+      <span class="eyebrow">Клуб «Остро»</span>
+      <h2 class="title">Каждая <span class="red">шестая</span><br>стрижка — <span class="out">наша</span></h2>
+      <div class="perks">
+        <div class="perk"><b>Кофе и чай</b><span>Свежий эспрессо или чай, пока ждёте</span></div>
+        <div class="perk"><b>PlayStation</b><span>FIFA и Mortal Kombat в зоне ожидания</span></div>
+        <div class="perk"><b>Напомним</b><span>Через 3 недели пришлём, что пора освежить</span></div>
+        <div class="perk"><b>День рождения</b><span>Скидка 20% всю неделю</span></div>
+      </div>
+    </div>
+    <div class="lcard rv d2" id="lcard">
+      <div class="top"><b>ОСТРО · КЛУБ</b><span>карта гостя</span></div>
+      <div class="stamps" id="stamps"></div>
+      <p>Карта копится автоматически по номеру телефона, ничего носить с собой не нужно.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ОТЗЫВЫ -->
+<section class="sec" id="reviews" style="padding-top:20px">
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap">
+      <div class="rv"><span class="eyebrow">Отзывы</span><h2 class="title">Говорят <span class="red">клиенты</span></h2></div>
+      <div class="score rv d1"><div><b>4,9</b><span>Яндекс Карты · 980</span></div><div><b>5,0</b><span>2ГИС · 640</span></div></div>
+    </div>
+    <div class="revs">
+      <div class="rev rv"><div class="st">★★★★★</div><p>Хожу к Рустаму два года. Фейд держит форму почти месяц, ни разу не было «ступенек».</p><div class="who"><span class="av">А</span><div><b>Артём</b><small>Фейд + борода</small></div></div></div>
+      <div class="rev rv d1"><div class="st">★★★★★</div><p>Привёл сына на первую стрижку, боялся истерики. Даня включил мультики, сделал всё за 20 минут. Теперь ходим вместе.</p><div class="who"><span class="av">С</span><div><b>Сергей</b><small>Отец + сын</small></div></div></div>
+      <div class="rev rv d2"><div class="st">★★★★★</div><p>Королевское бритьё у Влада — отдельный вид удовольствия. Горячие полотенца, опасная бритва, полный релакс.</p><div class="who"><span class="av">М</span><div><b>Михаил</b><small>Королевское бритьё</small></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section class="contact" id="contacts">
+  <div class="wrap">
+    <h2 class="big rv">Пора<br><span class="out">освежиться</span></h2>
+    <div style="margin-top:40px" class="rv d1"><button class="btn btn-ink" data-book>Записаться онлайн →</button></div>
+    <div class="ctg">
+      <div><div class="lb">Адрес</div><div class="v">ул. Ленина, 24<br>вход со двора</div></div>
+      <div><div class="lb">Телефон</div><a class="v" href="tel:+70000000000">+7 (000) 000-00-00</a></div>
+      <div><div class="lb">Часы работы</div><div class="v">Ежедневно<br>10:00 – 22:00</div></div>
+      <div><div class="lb">Соцсети</div><div class="v"><a href="#">Telegram</a> · <a href="#">ВКонтакте</a></div></div>
+    </div>
+    <div class="foot"><span>© Барбершоп «Остро»</span><span>Пример сайта. Барбершоп, мастера, отзывы и контакты вымышлены.</span></div>
+  </div>
+</section>
+
+<!-- ОКНО ЗАПИСИ -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Онлайн-запись">
+  <div class="bg" data-close></div>
+  <div class="sheet">
+    <div class="sheet-top"><span class="eyebrow">Онлайн-запись</span><button class="close" data-close aria-label="Закрыть">✕</button></div>
+    <div class="bar" id="bar"></div>
+    <div id="bkBody"></div>
+    <div class="sheet-foot" id="bkFoot"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ---------- Данные ----------
+  var LEVELS = ['Барбер', 'Топ-барбер', 'Арт-директор'];
+  var SERVICES = [
+    { id: 'cut', name: 'Мужская стрижка', dur: 60, p: [1900, 2400, 2900], note: 'Мытьё, стрижка, укладка' },
+    { id: 'fade', name: 'Фейд или андеркат', dur: 60, p: [2100, 2600, 3100], note: 'Плавный переход от кожи' },
+    { id: 'clipper', name: 'Стрижка машинкой', dur: 30, p: [1100, 1300, 1600], note: 'Одна или две насадки' },
+    { id: 'beard', name: 'Моделирование бороды', dur: 30, p: [1200, 1500, 1800], note: 'Форма, контур, уход' },
+    { id: 'shave', name: 'Королевское бритьё', dur: 45, p: [1500, 1800, 2200], note: 'Горячие полотенца, опасная бритва' },
+    { id: 'kids', name: 'Детская стрижка', dur: 40, p: [1300, 1600, 1900], note: 'До 12 лет' },
+    { id: 'grey', name: 'Камуфляж седины', dur: 30, p: [1000, 1200, 1400], note: 'Естественный оттенок' },
+    { id: 'style', name: 'Укладка', dur: 15, p: [500, 600, 700], note: 'Воск, глина или паста' }
+  ];
+  var MASTERS = [
+    { id: 'danya', name: 'Даня', gen: 'Дани', lvl: 0, exp: '2 года', spec: 'Классика, детские стрижки', look: 'crop', beard: false },
+    { id: 'timur', name: 'Тимур', gen: 'Тимура', lvl: 0, exp: '3 года', spec: 'Машинка, фейды', look: 'buzz', beard: true },
+    { id: 'rustam', name: 'Рустам', gen: 'Рустама', lvl: 1, exp: '6 лет', spec: 'Фейды, бороды', look: 'fade', beard: true },
+    { id: 'vlad', name: 'Влад', gen: 'Влада', lvl: 2, exp: '11 лет', spec: 'Сложные стрижки, бритьё', look: 'pomp', beard: true }
+  ];
+  var STYLES = [
+    { id: 'classic', name: 'Классика', svc: 'cut', time: '45–60 мин', who: 'Офис, деловой стиль, любой тип лица', care: 'Раз в 4–5 недель', desc: 'Аккуратный пробор, плавно укороченные виски. Выглядит опрятно и с костюмом, и с худи.' },
+    { id: 'fade', name: 'Фейд', svc: 'fade', time: '50–60 мин', who: 'Тем, кто хочет выглядеть свежо каждый день', care: 'Раз в 2–3 недели', desc: 'Виски и затылок плавно уходят «в ноль», сверху остаётся короткая текстура.' },
+    { id: 'crop', name: 'Кроп', svc: 'cut', time: '45 мин', who: 'Густым и непослушным волосам', care: 'Раз в 3–4 недели', desc: 'Короткая рваная чёлка и текстурный верх. Укладка за минуту, даже без средств.' },
+    { id: 'under', name: 'Андеркат', svc: 'fade', time: '60 мин', who: 'Тем, кто готов к контрасту', care: 'Раз в 3 недели', desc: 'Длинный верх, зачёсанный набок, и очень короткие бока. Яркий и узнаваемый силуэт.' },
+    { id: 'pomp', name: 'Помпадур', svc: 'cut', time: '60 мин', who: 'Овальному и вытянутому лицу', care: 'Раз в 4 недели', desc: 'Объёмный кок надо лбом в стиле 50-х. Нужна укладка, зато смотрится эффектно.' },
+    { id: 'buzz', name: 'Бокс', svc: 'clipper', time: '30 мин', who: 'Спортсменам и тем, кто ценит время', care: 'Раз в 2 недели', desc: 'Короткая стрижка машинкой. Минимум ухода, максимум мужественности.' }
+  ];
+  function rub(n) { return n.toLocaleString('ru-RU').replace(/ /g, ' ') + ' ₽'; }
+  function svc(id) { return SERVICES.find(function (s) { return s.id === id; }); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+
+  // ---------- Рисуем голову ----------
+  var uid = 0;
+  function head(style, beard, opt) {
+    opt = opt || {};
+    var k = 'h' + (uid++), hair = opt.hairColor || '#161616', skin = opt.skin || '#e6bb9a';
+    // виски «в ноль»: полоса по контуру головы, тает книзу
+    var fade = '<path d="M77 86 Q72 100 72.5 120 L79 118 Q79 100 86 84Z" fill="url(#' + k + 'f)"/><path d="M163 86 Q168 100 167.5 120 L161 118 Q161 100 154 84Z" fill="url(#' + k + 'f)"/>';
+    var H = {
+      classic: '<path d="M70 110 Q60 50 118 44 Q178 46 170 110 Q166 84 156 76 Q136 64 110 68 Q90 70 80 84 Q72 94 70 110Z" fill="' + hair + '"/><path d="M98 50 Q96 62 92 74" stroke="#4a4a4a" stroke-width="2" fill="none"/><path d="M71 104 Q70 118 74 128 L80 126 Q76 116 77 104Z" fill="' + hair + '" opacity=".75"/><path d="M169 104 Q170 118 166 128 L160 126 Q164 116 163 104Z" fill="' + hair + '" opacity=".75"/>',
+      fade: '<path d="M76 88 Q72 48 120 44 Q168 48 164 88 Q150 70 120 70 Q90 70 76 88Z" fill="' + hair + '"/>' + fade,
+      crop: '<path d="M75 92 Q70 48 120 44 Q170 48 165 92 L157 82 L149 92 L141 80 L133 92 L125 80 L117 92 L109 80 L101 92 L93 80 L85 92Z" fill="' + hair + '"/>' + fade,
+      under: '<path d="M77 86 Q64 28 128 26 Q182 30 168 80 Q156 60 134 60 Q102 58 77 86Z" fill="' + hair + '"/><path d="M84 66 Q110 40 160 46" stroke="#3a3a3a" stroke-width="2" fill="none"/>' + fade.replace(/"\/>/g, '" opacity=".55"/>'),
+      pomp: '<path d="M78 88 Q62 8 124 8 Q182 12 164 86 Q150 58 120 58 Q94 58 78 88Z" fill="' + hair + '"/><path d="M90 40 Q118 14 158 30" stroke="#3a3a3a" stroke-width="2" fill="none"/>' + fade,
+      buzz: '<path d="M72 106 Q64 52 120 48 Q176 52 168 106 Q160 74 120 70 Q80 74 72 106Z" fill="' + hair + '" opacity=".55"/>',
+      messy: '<path d="M62 132 Q42 60 92 36 Q122 22 154 36 Q196 58 180 132 L172 112 L168 132 L160 100 Q150 82 134 86 L130 72 L120 90 L108 74 L102 92 L90 84 Q78 94 74 112 L68 102Z" fill="' + hair + '"/><path d="M64 120 Q58 150 70 168 L74 132Z" fill="' + hair + '"/><path d="M176 120 Q182 150 170 168 L166 132Z" fill="' + hair + '"/>'
+    };
+    var B = '';
+    if (beard === 'neat') B = '<g class="beard-g"><path d="M73 118 Q72 180 120 190 Q168 180 167 118 Q162 148 148 156 Q134 146 120 146 Q106 146 92 156 Q78 148 73 118Z" fill="' + hair + '"/><path d="M104 150 Q120 144 136 150 Q132 156 120 156 Q108 156 104 150Z" fill="' + hair + '"/></g>';
+    if (beard === 'messy') B = '<g class="beard-g"><path d="M70 116 Q66 196 120 208 Q174 196 170 116 L166 140 Q162 160 148 160 Q134 150 120 150 Q106 150 92 160 Q78 160 74 140Z M84 196 L92 214 L100 200 L110 216 L120 204 L130 216 L140 200 L148 214 L156 196Z" fill="' + hair + '" opacity=".88"/><path d="M100 152 Q120 144 140 152 Q134 160 120 160 Q106 160 100 152Z" fill="' + hair + '"/></g>';
+    return '<svg viewBox="0 0 240 260" aria-hidden="true"><defs><linearGradient id="' + k + 'f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + hair + '" stop-opacity=".9"/><stop offset="1" stop-color="' + hair + '" stop-opacity="0"/></linearGradient></defs>' +
+      '<path d="M26 262 Q36 202 120 192 Q204 202 214 262Z" fill="' + (opt.shirt || '#121212') + '"/>' +
+      '<path d="M100 150 L100 196 Q120 206 140 196 L140 150Z" fill="#d6a584"/>' +
+      '<ellipse cx="72" cy="118" rx="9" ry="14" fill="#dcae8e"/><ellipse cx="168" cy="118" rx="9" ry="14" fill="#dcae8e"/>' +
+      '<ellipse cx="120" cy="114" rx="48" ry="58" fill="' + skin + '"/>' +
+      '<path d="M96 100 Q104 95 112 99 M128 99 Q136 95 144 100" stroke="#3a2a20" stroke-width="3" stroke-linecap="round" fill="none"/>' +
+      '<ellipse cx="104" cy="112" rx="3.5" ry="4" fill="#2a1e17"/><ellipse cx="136" cy="112" rx="3.5" ry="4" fill="#2a1e17"/>' +
+      '<path d="M120 116 Q115 132 122 135" stroke="#b98a6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>' +
+      B +
+      '<path d="M109 151 Q120 156 131 151" stroke="#8a4e3a" stroke-width="3" stroke-linecap="round" fill="none"/>' +
+      '<g class="hair">' + (H[style] || '') + '</g></svg>';
+  }
+
+  // ---------- Шапка и меню ----------
+  var nav = document.getElementById('nav'), burger = document.getElementById('burger');
+  function onScroll() { nav.classList.toggle('scrolled', scrollY > 30); }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  function setMenu(o) { document.body.classList.toggle('menu-open', o); document.body.classList.toggle('lock', o); burger.setAttribute('aria-expanded', o); }
+  burger.addEventListener('click', function () { setMenu(!document.body.classList.contains('menu-open')); });
+  document.querySelectorAll('#mmenu a, #mmenu button').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+
+  // ---------- До / после ----------
+  var ba = document.getElementById('ba'), baR = document.getElementById('baRange');
+  document.getElementById('baBefore').innerHTML = head('messy', 'messy', { hairColor: '#2a211b' });
+  document.getElementById('baAfter').innerHTML = head('fade', 'neat');
+  function setP(v) { ba.style.setProperty('--p', v + '%'); }
+  baR.addEventListener('input', function () { setP(baR.value); ba.dataset.touched = 1; });
+  // подсказка движением один раз
+  setTimeout(function () {
+    if (ba.dataset.touched || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var t0 = null;
+    requestAnimationFrame(function step(t) {
+      if (ba.dataset.touched) return;
+      t0 = t0 || t; var p = (t - t0) / 1800;
+      if (p >= 1) { setP(50); baR.value = 50; return; }
+      var v = 50 + Math.sin(p * Math.PI * 2) * 22; setP(v); baR.value = v;
+      requestAnimationFrame(step);
+    });
+  }, 1600);
+
+  // ---------- Появление и счётчики ----------
+  function countUp(el) {
+    var end = +el.dataset.count, t0 = null;
+    requestAnimationFrame(function step(t) {
+      t0 = t0 || t; var p = Math.min((t - t0) / 1600, 1), v = Math.round(end * (1 - Math.pow(1 - p, 3)));
+      el.textContent = el.hasAttribute('data-sep') ? v.toLocaleString('ru-RU').replace(/ /g, ' ') : v;
+      if (p < 1) requestAnimationFrame(step);
+    });
+  }
+  setTimeout(function () { document.querySelectorAll('[data-count]').forEach(countUp); }, 600);
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in'); io.unobserve(e.target);
+      if (e.target.id === 'lcard') fillStamps();
+    });
+  }, { threshold: .15, rootMargin: '0px 0px -40px 0px' }) : null;
+  document.querySelectorAll('.rv').forEach(function (el) { if (io) io.observe(el); else el.classList.add('in'); });
+  if (!io) setTimeout(fillStamps, 300);
+
+  // ---------- Подбор стрижки ----------
+  var curStyle = 'fade', withBeard = false;
+  var slist = document.getElementById('slist'), stage = document.getElementById('stage'), sinfo = document.getElementById('sinfo');
+  slist.innerHTML = STYLES.map(function (s) { return '<button class="sbtn" role="tab" data-style="' + s.id + '">' + s.name + '<small>от ' + rub(svc(s.svc).p[0]) + '</small></button>'; }).join('');
+  function renderStyle(anim) {
+    var s = STYLES.find(function (x) { return x.id === curStyle; });
+    slist.querySelectorAll('.sbtn').forEach(function (b) { var on = b.dataset.style === curStyle; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+    stage.innerHTML = head(s.id === 'classic' ? 'classic' : s.id, withBeard ? 'neat' : null);
+    stage.setAttribute('aria-label', 'Стрижка ' + s.name + (withBeard ? ' с бородой' : ''));
+    if (anim) { stage.classList.remove('swap'); void stage.offsetWidth; stage.classList.add('swap'); }
+    var base = svc(s.svc).p[0] + (withBeard ? svc('beard').p[0] - 300 : 0);
+    sinfo.innerHTML = '<h3>' + s.name + '</h3><p>' + s.desc + '</p><dl><dt>Кому</dt><dd>' + s.who + '</dd><dt>Время</dt><dd>' + s.time + (withBeard ? ' + 30 мин' : '') + '</dd><dt>Обновлять</dt><dd>' + s.care + '</dd><dt>Цена</dt><dd>от ' + rub(base) + (withBeard ? ' <small style="color:var(--red)">с бородой −300 ₽</small>' : '') + '</dd></dl>' +
+      '<label class="toggle"><input type="checkbox" id="beardTg"' + (withBeard ? ' checked' : '') + '><span class="sw"></span>Добавить бороду</label><br>' +
+      '<button class="btn btn-ink" id="styleBook">Записаться на «' + s.name + '» →</button>';
+    document.getElementById('beardTg').addEventListener('change', function (e) { withBeard = e.target.checked; renderStyle(true); document.getElementById('beardTg').focus(); });
+    document.getElementById('styleBook').addEventListener('click', function () { var pre = [s.svc]; if (withBeard) pre.push('beard'); openBooking({ services: pre }); });
+  }
+  slist.addEventListener('click', function (e) { var b = e.target.closest('[data-style]'); if (b && b.dataset.style !== curStyle) { curStyle = b.dataset.style; renderStyle(true); } });
+  renderStyle(false);
+
+  // ---------- Цены ----------
+  var lvl = 0, lvlBox = document.getElementById('lvl');
+  lvlBox.innerHTML = LEVELS.map(function (l, i) { return '<button role="tab" data-l="' + i + '">' + l + '</button>'; }).join('');
+  function renderPrices(flash) {
+    lvlBox.querySelectorAll('button').forEach(function (b) { var on = +b.dataset.l === lvl; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+    document.getElementById('plist').innerHTML = SERVICES.map(function (s) {
+      return '<div class="pi"><div><h4>' + s.name + '</h4><small>' + s.note + ' · ' + s.dur + ' мин</small></div><span class="dots"></span><span class="pr' + (flash ? ' flash' : '') + '">' + rub(s.p[lvl]) + '</span></div>';
+    }).join('');
+  }
+  lvlBox.addEventListener('click', function (e) { var b = e.target.closest('[data-l]'); if (b) { lvl = +b.dataset.l; renderPrices(true); } });
+  renderPrices(false);
+
+  // ---------- Слоты и мастера ----------
+  var DAYS = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'], MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+  var TIMES = []; for (var h = 10; h <= 21; h++) { TIMES.push(h + ':00'); if (h < 21) TIMES.push(h + ':30'); }
+  function dayList() { var o = [], d = new Date(); d.setHours(0, 0, 0, 0); for (var i = 0; i < 10; i++) { var x = new Date(d); x.setDate(d.getDate() + i); o.push(x); } return o; }
+  function mins(t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; }
+  function slotBusy(day, t, master) {
+    var now = new Date();
+    if (day.toDateString() === now.toDateString() && mins(t) <= now.getHours() * 60 + now.getMinutes() + 20) return true;
+    var list = master === 'any' ? MASTERS.map(function (m) { return m.id; }) : [master];
+    return list.every(function (m) { var s = day.getDate() + t + m, x = 0; for (var i = 0; i < s.length; i++) x = (x * 33 + s.charCodeAt(i)) % 997; return x % 3 === 0; });
+  }
+  function nearest(master) {
+    var days = dayList();
+    for (var i = 0; i < days.length; i++) for (var j = 0; j < TIMES.length; j++) if (!slotBusy(days[i], TIMES[j], master)) return (i === 0 ? 'сегодня' : i === 1 ? 'завтра' : DAYS[days[i].getDay()] + ' ' + days[i].getDate()) + ' в ' + TIMES[j];
+    return 'нет окон';
+  }
+  var looks = { crop: '#2b2b2b', buzz: '#1a1a1a', fade: '#141414', pomp: '#3a2a1e' };
+  document.getElementById('teamGrid').innerHTML = MASTERS.map(function (m, i) {
+    return '<article class="mc rv' + (i ? ' d' + i : '') + '"><div class="ph">' + head(m.look, m.beard ? 'neat' : null, { hairColor: looks[m.look], shirt: '#2a2a2a', skin: ['#e6bb9a', '#d9a47e', '#c98f68', '#e9c3a6'][i] }) +
+      '<span class="lv' + (m.lvl === 1 ? ' top' : m.lvl === 2 ? ' art' : '') + '">' + LEVELS[m.lvl] + '</span></div>' +
+      '<div class="body"><h3>' + m.name + '</h3><p>' + m.spec + ' · ' + m.exp + '</p><div class="near"><i></i>Ближайшее: ' + nearest(m.id) + '</div>' +
+      '<button class="btn btn-ink btn-sm" data-master="' + m.id + '">Записаться</button></div></article>';
+  }).join('');
+  document.querySelectorAll('#teamGrid .rv').forEach(function (el) { if (io) io.observe(el); else el.classList.add('in'); });
+  document.getElementById('teamGrid').addEventListener('click', function (e) { var b = e.target.closest('[data-master]'); if (b) openBooking({ master: b.dataset.master }); });
+
+  // ---------- Карта лояльности ----------
+  var stampSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 16.5L19 4M15.5 16.5L5 4"/></svg>';
+  var stamps = document.getElementById('stamps');
+  stamps.innerHTML = [0, 1, 2, 3, 4].map(function () { return '<div class="stamp">' + stampSvg + '</div>'; }).join('') + '<div class="stamp free">бес-<br>плат-<br>но</div>';
+  var stamped = false;
+  function fillStamps() {
+    if (stamped) return; stamped = true;
+    var s = stamps.querySelectorAll('.stamp');
+    [0, 1, 2, 3, 4].forEach(function (i) { setTimeout(function () { s[i].classList.add('on'); }, 300 + i * 260); });
+    setTimeout(function () { s[5].classList.add('lit'); }, 300 + 5 * 260);
+  }
+
+  // ---------- Запись ----------
+  var modal = document.getElementById('modal'), bk = {}, lastFocus = null;
+  function calc(list, level) {
+    var sum = 0, dur = 0;
+    list.forEach(function (id) { var s = svc(id); sum += s.p[level]; dur += s.dur; });
+    var combo = list.indexOf('beard') >= 0 && (list.indexOf('cut') >= 0 || list.indexOf('fade') >= 0 || list.indexOf('clipper') >= 0);
+    if (combo) sum -= 300;
+    return { sum: sum, dur: dur, combo: combo };
+  }
+  function masterLvl() { var m = MASTERS.find(function (x) { return x.id === bk.master; }); return m ? m.lvl : 0; }
+  function durText(m) { return m >= 60 ? Math.floor(m / 60) + ' ч' + (m % 60 ? ' ' + m % 60 + ' мин' : '') : m + ' мин'; }
+  function dayLabel(d) { return DAYS[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()]; }
+
+  function openBooking(pre) {
+    pre = pre || {};
+    lastFocus = document.activeElement;
+    bk = { step: 0, services: (pre.services || []).slice(), master: pre.master || null, day: null, time: null, name: '', phone: '', comment: '' };
+    if (bk.services.length) bk.step = 1;
+    modal.classList.add('open'); document.body.classList.add('lock');
+    render();
+    setTimeout(function () { modal.querySelector('.close').focus(); }, 50);
+  }
+  function closeBooking() {
+    modal.classList.remove('open'); document.body.classList.remove('lock');
+    if (lastFocus && document.contains(lastFocus) && lastFocus.offsetParent !== null) lastFocus.focus();
+  }
+  document.querySelectorAll('[data-book]').forEach(function (b) { b.addEventListener('click', function () { openBooking(); }); });
+  modal.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) closeBooking(); });
+  var tick = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l2.5 2.5L11 4.5"/></svg>';
+
+  function render() {
+    document.getElementById('bar').innerHTML = bk.step === 4 ? '' : [0, 1, 2, 3].map(function (i) { return '<i class="' + (i <= bk.step ? 'on' : '') + '"></i>'; }).join('');
+    var body = document.getElementById('bkBody'), foot = document.getElementById('bkFoot'), html = '', can = false, label = 'Далее →';
+    var days = dayList();
+    if (bk.step === 0) {
+      var c0 = calc(bk.services, bk.master ? masterLvl() : 0);
+      html = '<div class="bk-t">Что делаем?</div><div class="bk-s">Можно выбрать несколько услуг.</div><div class="opts">' +
+        SERVICES.map(function (s) { var on = bk.services.indexOf(s.id) >= 0; return '<button class="opt' + (on ? ' on' : '') + '" data-svc="' + s.id + '" role="checkbox" aria-checked="' + on + '"><span class="ck">' + tick + '</span><span class="tx"><b>' + s.name + '</b><small>' + s.dur + ' мин · ' + s.note + '</small></span><span class="pr">' + (bk.master ? '' : 'от ') + rub(s.p[bk.master ? masterLvl() : 0]) + '</span></button>'; }).join('') + '</div>' +
+        (bk.services.length ? '<div class="total"><div>Итого' + (bk.master ? '' : ' от') + '<small>' + durText(c0.dur) + (c0.combo ? ' · <span class="disc">комплекс −300 ₽</span>' : '') + '</small></div><b>' + rub(c0.sum) + '</b></div>' : '');
+      can = bk.services.length > 0;
+    } else if (bk.step === 1) {
+      html = '<div class="bk-t">К кому?</div><div class="bk-s">Цена зависит от уровня мастера.</div><div class="opts">' +
+        [{ id: 'any', name: 'Любой свободный', lvl: 0, spec: 'Ближайшее: ' + nearest('any') }].concat(MASTERS.map(function (m) { return { id: m.id, name: m.name, lvl: m.lvl, spec: LEVELS[m.lvl] + ' · ' + m.exp + ' · ближайшее ' + nearest(m.id) }; })).map(function (m) {
+          var on = bk.master === m.id, c = calc(bk.services, m.lvl);
+          return '<button class="opt radio' + (on ? ' on' : '') + '" data-m="' + m.id + '" role="radio" aria-checked="' + on + '"><span class="ck">' + tick + '</span><span class="tx"><b>' + m.name + '</b><small>' + m.spec + '</small></span><span class="pr">' + rub(c.sum) + '</span></button>';
+        }).join('') + '</div>';
+      can = !!bk.master;
+    } else if (bk.step === 2) {
+      html = '<div class="bk-t">Когда?</div><div class="bk-s">Зачёркнутое время занято.</div><div class="lbl" style="margin-top:0">День</div><div class="chips days">' +
+        days.map(function (d, i) { return '<button class="chip' + (bk.day === i ? ' on' : '') + '" data-day="' + i + '"><small>' + (i === 0 ? 'Сегодня' : i === 1 ? 'Завтра' : DAYS[d.getDay()]) + '</small><b>' + d.getDate() + '</b></button>'; }).join('') + '</div>';
+      if (bk.day !== null) {
+        var free = TIMES.filter(function (t) { return !slotBusy(days[bk.day], t, bk.master); });
+        html += '<div class="lbl">Время</div>' + (free.length ? '<div class="chips times">' + TIMES.map(function (t) {
+          var b = slotBusy(days[bk.day], t, bk.master);
+          return '<button class="chip' + (bk.time === t ? ' on' : '') + '" data-time="' + t + '"' + (b ? ' disabled aria-label="' + t + ', занято"' : '') + '>' + t + '</button>';
+        }).join('') + '</div>' : '<p class="note" style="font-size:14px">На этот день свободного времени нет, выберите другой.</p>');
+      }
+      can = bk.day !== null && !!bk.time;
+    } else if (bk.step === 3) {
+      var c3 = calc(bk.services, masterLvl()), mn = bk.master === 'any' ? 'Любой свободный' : MASTERS.find(function (m) { return m.id === bk.master; }).name;
+      html = '<div class="bk-t">Почти всё</div><div class="bk-s">Проверьте запись и оставьте контакты.</div>' +
+        '<div class="summary"><div><span>Услуги</span><b>' + bk.services.map(function (id) { return svc(id).name; }).join(', ') + '</b></div><div><span>Мастер</span><b>' + mn + '</b></div><div><span>Когда</span><b>' + dayLabel(days[bk.day]) + ', ' + bk.time + '</b></div><div><span>Длительность</span><b>' + durText(c3.dur) + '</b></div><div><span>К оплате</span><b>' + rub(c3.sum) + '</b></div></div>' +
+        '<div class="field"><label for="fName">Имя</label><input id="fName" autocomplete="name" placeholder="Как к вам обращаться" value="' + esc(bk.name) + '"></div>' +
+        '<div class="field"><label for="fPhone">Телефон</label><input id="fPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" value="' + esc(bk.phone) + '"></div>' +
+        '<div class="field"><label for="fComment">Комментарий</label><textarea id="fComment" rows="2" placeholder="Например: хочу как на фото, пришлю в WhatsApp">' + esc(bk.comment) + '</textarea></div>' +
+        '<p class="note">Это демонстрационный сайт: запись никуда не отправляется.</p>';
+      can = valid(); label = 'Записаться';
+    } else {
+      var nm = esc(bk.name.trim().split(/\s+/)[0]), mm = bk.master === 'any' ? 'свободного мастера' : MASTERS.find(function (m) { return m.id === bk.master; }).gen;
+      html = '<div class="done"><div class="ok"><svg width="48" height="48" viewBox="0 0 44 44" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 23l7 7 14-15"/></svg></div>' +
+        '<div class="bk-t">' + nm + ', ждём!</div><p class="bk-s" style="max-width:380px;margin:12px auto 0">' + dayLabel(days[bk.day]) + ' в ' + bk.time + ' у ' + mm + '. За 2 часа пришлём напоминание. Кофе будет готов.</p></div>';
+    }
+    body.innerHTML = html;
+    if (bk.step === 4) foot.innerHTML = '<button class="btn btn-ink" data-close>Готово</button>';
+    else foot.innerHTML = (bk.step > 0 ? '<button class="btn btn-line" data-back style="flex:0 0 auto" aria-label="Назад">←</button>' : '') + '<button class="btn btn-ink" data-next' + (can ? '' : ' disabled') + '>' + label + '</button>';
+    if (bk.step === 3) bindForm();
+  }
+  function valid() { return bk.name.trim().length > 1 && bk.phone.replace(/\D/g, '').length === 11; }
+  function bindForm() {
+    var n = document.getElementById('fName'), p = document.getElementById('fPhone'), c = document.getElementById('fComment');
+    function upd() { var b = document.querySelector('#bkFoot [data-next]'); if (b) b.disabled = !valid(); }
+    n.addEventListener('input', function () { bk.name = n.value; upd(); });
+    c.addEventListener('input', function () { bk.comment = c.value; });
+    p.addEventListener('focus', function () { if (!p.value) p.value = '+7 ('; });
+    p.addEventListener('input', function () { p.value = maskPhone(p.value); bk.phone = p.value; upd(); });
+  }
+  function maskPhone(v) {
+    var d = v.replace(/\D/g, '');
+    if (!d) return '';
+    var n = /^\s*\+7/.test(v) ? d.slice(1) : d;
+    if (n.length === 11 && (n[0] === '8' || n[0] === '7')) n = n.slice(1);
+    n = n.slice(0, 10);
+    if (!n) return v.length < 4 ? '' : '+7 (';
+    var r = '+7 (' + n.slice(0, 3);
+    if (n.length > 3) r += ') ' + n.slice(3, 6);
+    if (n.length > 6) r += '-' + n.slice(6, 8);
+    if (n.length > 8) r += '-' + n.slice(8, 10);
+    return r;
+  }
+  modal.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || b.disabled) return;
+    if (b.dataset.svc) {
+      var i = bk.services.indexOf(b.dataset.svc);
+      if (i >= 0) bk.services.splice(i, 1); else bk.services.push(b.dataset.svc);
+      render(); var again = modal.querySelector('[data-svc="' + b.dataset.svc + '"]'); if (again) again.focus({ preventScroll: true }); return;
+    }
+    if (b.dataset.m) { bk.master = b.dataset.m; if (bk.time && bk.day !== null && slotBusy(dayList()[bk.day], bk.time, bk.master)) bk.time = null; render(); var a2 = modal.querySelector('[data-m="' + b.dataset.m + '"]'); if (a2) a2.focus({ preventScroll: true }); return; }
+    if (b.dataset.day) { bk.day = +b.dataset.day; if (bk.time && slotBusy(dayList()[bk.day], bk.time, bk.master)) bk.time = null; return render(); }
+    if (b.dataset.time) { bk.time = b.dataset.time; return render(); }
+    if (b.hasAttribute('data-next')) { bk.step++; render(); modal.querySelector('.sheet').scrollTop = 0; return; }
+    if (b.hasAttribute('data-back')) { bk.step--; render(); return; }
+  });
+  addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (modal.classList.contains('open')) closeBooking();
+      else if (document.body.classList.contains('menu-open')) { setMenu(false); burger.focus(); }
+      return;
+    }
+    if (e.key === 'Tab' && modal.classList.contains('open')) {
+      var f = [].filter.call(modal.querySelectorAll('button, input, textarea'), function (el) { return !el.disabled && el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+</script>
+</body>
+</html>
